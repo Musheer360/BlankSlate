@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Clock</title>
+  </head>
+  <body>
+    <script>
+      function updateTime() {
+        var clock = new Date();
+        var hours = clock.getHours();
+        var minutes = clock.getMinutes();
+        var AMPM = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12;
+        hours = hours < 10 ? "0" + hours : hours;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+
+        var options = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        };
+        var date = clock.toLocaleDateString("en-US", options);
+
+        var TimeString = hours + ":" + minutes;
+        var DateString = date;
+        document.getElementById("time").innerHTML = TimeString;
+        document.getElementById("date").innerHTML = DateString;
+      }
+
+      setInterval(updateTime, 1000);
+    </script>
+
+    <div class="clockbox">
+      <div class="time">
+        <p><span id="time"></span></p>
+      </div>
+      <div class="date">
+        <p><span id="date"></span></p>
+      </div>
+    </div>
+  </body>
+</html>
