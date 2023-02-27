@@ -50,7 +50,7 @@ function quoteGen() {
 }
 
 let weather = {
-  apiKey: "f13b50734a9037f193248d4330b2360c",
+  apiKey: "API_KEY_HERE",
   fetchWeather: function (city) {
     fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=" +
