@@ -1,103 +1,87 @@
 * {
-  margin: 0;
-  padding: 0;
-  font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
-  background: url(https://source.unsplash.com/user/marekpiwnicki/1940x970)
-    no-repeat;
-  background-size: cover;
-  background-position: center;
-  backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background: url(https://source.unsplash.com/user/marekpiwnicki/1940x970) no-repeat;
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(10px);
 }
 
 body .clockbox {
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .wish {
-  color: white;
-  position: absolute;
-  top: 4%;
-  left: 2.5%;
-  font-size: 25px;
+    color: white;
+    position: absolute;
+    top: 4%;
+    left: 2.5%;
+    font-size: 25px;
 }
 
 .time {
-  font-size: 110px;
-  letter-spacing: 3px;
-  font-weight: bold;
+    font-size: 110px;
+    letter-spacing: 3px;
+    font-weight: bold;
 }
 
 .date {
-  font-size: 20px;
-  letter-spacing: 2px;
+    font-size: 20px;
+    letter-spacing: 2px;
 }
 
 .quotes {
-  flex-direction: column;
-  color: white;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  bottom: 4%;
+    flex-direction: column;
+    color: white;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 4%;
 }
 
 .mainquote {
-  margin-bottom: 10px;
-  font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 .weather {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    position: absolute;
+    top: 4%;
+    right: 2.5%;
+    font-size: 25px;
 }
 
 .city {
-  margin-right: 0.5%;
-  color: white;
-  position: absolute;
-  top: 4%;
-  right: 15%;
-  font-size: 25px;
+    font-size: 25px;
 }
 
-.cityblock {
-  color: white;
-  position: absolute;
-  top: 4%;
-  font-size: 25px;
-  right: 14%;
+.cityblock,
+.tempblock {
+    font-size: 25px;
+    padding: 0 5px;
 }
 
 .description {
-  text-transform: capitalize;
-  color: white;
-  position: absolute;
-  top: 4%;
-  right: 7%;
-  font-size: 25px;
+    text-transform: capitalize;
+    font-size: 25px;
 }
 
-.iconblock {
-  color: white;
-  position: absolute;
-  top: 4%;
-  font-size: 25px;
-  right: 5.5%;
-}
-
-.weather .icon {
-  position: absolute;
-  top: 3.25%;
-  right: 2.5%;
+.weather .temp {
+    font-size: 25px;
 }
