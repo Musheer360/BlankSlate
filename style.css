@@ -1,87 +1,201 @@
 * {
-    margin: 0;
-    padding: 0;
-    font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Encode Sans Expanded", sans-serif;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    background: url(https://source.unsplash.com/user/marekpiwnicki/1940x970) no-repeat;
-    background-size: cover;
-    background-position: center;
-    backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  backdrop-filter: blur(10px);
 }
 
 body .clockbox {
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
 }
 
 .wish {
-    color: white;
-    position: absolute;
-    top: 4%;
-    left: 2.5%;
-    font-size: 25px;
+  color: white;
+  position: absolute;
+  top: 4%;
+  left: 2.5%;
+  font-size: 25px;
+  cursor: default;
 }
 
 .time {
-    font-size: 110px;
-    letter-spacing: 3px;
-    font-weight: bold;
+  font-size: 125px;
+  letter-spacing: 3px;
+  font-weight: bold;
 }
 
 .date {
-    font-size: 20px;
-    letter-spacing: 2px;
+  font-size: 21.5px;
+  letter-spacing: 2.75px;
 }
 
 .quotes {
-    flex-direction: column;
-    color: white;
-    display: flex;
-    align-items: center;
-    position: absolute;
-    bottom: 4%;
+  flex-direction: column;
+  color: white;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 4%;
+  cursor: default;
 }
 
 .mainquote {
-    margin-bottom: 10px;
-    font-size: 18px;
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .weather {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    position: absolute;
-    top: 4%;
-    right: 2.5%;
-    font-size: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  position: absolute;
+  top: 4%;
+  right: 2.5%;
+  font-size: 25px;
 }
 
 .city {
-    font-size: 25px;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .cityblock,
 .tempblock {
-    font-size: 25px;
-    padding: 0 5px;
+  font-size: 25px;
+  padding: 0 5px;
+  cursor: default;
 }
 
 .description {
-    text-transform: capitalize;
-    font-size: 25px;
+  text-transform: capitalize;
+  font-size: 25px;
+  cursor: default;
 }
 
 .weather .temp {
-    font-size: 25px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.searchbox {
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  transform: translateX(-50%);
+  height: 40px;
+  width: 320px;
+  border: 0;
+  font-size: 17px;
+  padding-left: 15px;
+  background-color: black;
+  border-radius: 5px;
+  opacity: 55%;
+  transition: top 0.5s ease;
+  color: white;
+}
+
+.searchbox:focus {
+  outline: none;
+}
+
+.wish,
+.weather {
+  position: absolute;
+  top: 4%;
+}
+
+.wish {
+  left: 2.5%;
+}
+
+.weather {
+  right: 2.5%;
+}
+
+.selectcity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.askname {
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  transform: translateX(-50%);
+  height: 40px;
+  width: 320px;
+  border: 0;
+  font-size: 17px;
+  padding-left: 15px;
+  background-color: black;
+  border-radius: 5px;
+  opacity: 55%;
+  transition: top 0.5s ease;
+  color: white;
+}
+
+.askname:focus {
+  outline: none;
+}
+
+.units {
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  transform: translateX(-50%);
+  height: 40px;
+  width: 215px;
+  border: 0;
+  font-size: 17px;
+  background-color: black;
+  border-radius: 5px;
+  opacity: 55%;
+  transition: top 0.5s ease;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.celcius {
+  font-size: 16px;
+  background: transparent;
+  color: white;
+  border: 0;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.fahrenhiet {
+  font-size: 16px;
+  background: transparent;
+  color: white;
+  border: 0;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.bgchange {
+  position: absolute;
+  bottom: 5%;
+  left: 2.5%;
+  font-size: 35px;
+  cursor: default;
+  background: transparent;
+  color: white;
+  border: 0;
 }
