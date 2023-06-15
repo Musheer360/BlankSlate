@@ -1,126 +1,292 @@
-function updateTime() {
-  var clock = new Date();
-  var hours = clock.getHours();
-  var minutes = clock.getMinutes();
-  var timeof;
+document.addEventListener("DOMContentLoaded", function () {
+  var chooseLocalBtn = document.getElementById("chooselocal");
+  var chooseUnsplashBtn = document.getElementById("chooseUnsplash");
 
-  if (hours < 12 && hours >= 0) {
-    timeof = "morning";
-  } else if (hours < 18 && hours >= 12) {
-    timeof = "afternoon";
-  } else if (hours >= 18 && hours <= 23) {
-    timeof = "evening";
-  }
+  chooseLocalBtn.addEventListener("click", function () {
+    var fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
 
-  var asknameInput = document.getElementById("askname-input");
-  var greeting = document.getElementById("greet");
-  var name = localStorage.getItem("name");
+    fileInput.addEventListener("change", function () {
+      var file = fileInput.files[0];
+      var reader = new FileReader();
 
-  if (name) {
-    greeting.innerHTML = "Good " + timeof + ", " + name + "!";
-  } else {
-    greeting.innerHTML = "Good " + timeof + "!";
-    asknameInput.style.top = "3.5%";
-  }
+      reader.addEventListener("load", function () {
+        var imageDataURL = reader.result;
+        localStorage.setItem("imageData", imageDataURL);
+        setBackgroundImage();
+      });
 
-  asknameInput.addEventListener("change", function () {
-    name = asknameInput.value;
-    localStorage.setItem("name", name);
-    greeting.innerHTML = `Good ${timeof}, ${name}!`;
+      reader.readAsDataURL(file);
+    });
+
+    fileInput.click();
   });
 
-  if (hours == 0) {
-    hours = 12;
-  } else if (hours > 12) {
-    hours = hours % 12;
+  let isButtonClickAllowed = true;
+
+  chooseUnsplashBtn.addEventListener("click", function () {
+    if (isButtonClickAllowed) {
+      isButtonClickAllowed = false;
+
+      fetchUnsplashImage();
+
+      setTimeout(function () {
+        isButtonClickAllowed = true;
+      }, 2000);
+    }
+  });
+
+  setBackgroundImage();
+});
+
+function setBackgroundImage() {
+  if (!navigator.onLine) {
+    loadRandomLocalImage();
+    return;
   }
 
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var imageDataURL = localStorage.getItem("imageData");
+  var today = new Date();
+  var lastUpdate = new Date(localStorage.getItem("lastUpdate"));
 
-  var options = {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  };
-  var date = clock.toLocaleDateString("en-US", options);
-
-  var TimeString = hours + ":" + minutes;
-  var DateString = date;
-  document.getElementById("time").innerHTML = TimeString;
-  document.getElementById("date").innerHTML = DateString;
-}
-
-setInterval(updateTime, 1000);
-
-function loadRandomBackground() {
-  var images = [
-    "local-images/1.jpg",
-    "local-images/2.jpg",
-    "local-images/3.jpg",
-    "local-images/4.jpg",
-    "local-images/5.jpg",
-    "local-images/6.jpg",
-    "local-images/7.jpg",
-    "local-images/8.jpg",
-  ];
-  var randomIndex = Math.floor(Math.random() * images.length);
-  var randomImage = images[randomIndex];
-  document.body.style.background =
-    "url('" + randomImage + "') no-repeat center";
-}
-
-function checkInternetConnectivity() {
-  var imageAddr = "https://source.unsplash.com/user/marekpiwnicki/1920x1080";
-  var downloadImage = new Image();
-  downloadImage.onload = function () {
+  if (!lastUpdate || lastUpdate.getDate() !== today.getDate()) {
+    fetchUnsplashImage();
+  } else if (imageDataURL) {
     document.body.style.background =
-      "url('" + imageAddr + "')  no-repeat center";
-  };
-  downloadImage.onerror = function () {
-    loadRandomBackground();
-  };
-  downloadImage.src = imageAddr + "?n=" + Math.random();
+      "url(" + imageDataURL + ") no-repeat center / cover";
+  }
 }
 
-checkInternetConnectivity();
-
-function quoteGen() {
-  const quote = document.getElementById("mainquote");
-  const author = document.getElementById("author");
-
-  fetch("http://api.quotable.io/random?maxLength=50")
-    .then((res) => res.json())
-    .then((data) => {
-      mainquote.innerHTML = `“${data.content}”`;
-      mainauthor.innerHTML = `- ${data.author}`;
+function fetchUnsplashImage() {
+  fetch(
+    "https://source.unsplash.com/1920x1080/?dark,nature,city,cars,abstract,cinematic,amoled"
+  )
+    .then(function (response) {
+      return response.url;
+    })
+    .then(function (imageURL) {
+      localStorage.setItem("imageData", imageURL);
+      localStorage.setItem("lastUpdate", new Date());
+      document.body.style.background =
+        "url(" + imageURL + ") no-repeat center / cover";
+    })
+    .catch(function (error) {
+      console.error("Failed to fetch background image:", error);
+      loadRandomLocalImage();
     });
 }
 
-quoteGen();
+function loadRandomLocalImage() {
+  var imageIndex = Math.floor(Math.random() * 5) + 1;
+  var imageURL = "local-images/" + imageIndex + ".webp";
+  document.body.style.background =
+    "url(" + imageURL + ") no-repeat center / cover";
+}
+
+function toggleMenu() {
+  const menuButton = document.getElementById("settingsMenu");
+  menuButton.classList.toggle("opened");
+  menuButton.setAttribute(
+    "aria-expanded",
+    menuButton.classList.contains("opened")
+  );
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const menuButton = document.getElementById("settingsMenu");
+  menuButton.addEventListener("click", toggleMenu);
+});
+
+let isImageRotationAllowed = true;
+
+function rotateImage(image) {
+  if (isImageRotationAllowed) {
+    isImageRotationAllowed = false;
+
+    if (!image.classList.contains("rotated")) {
+      image.classList.add("rotated");
+      image.addEventListener(
+        "animationend",
+        () => {
+          image.classList.remove("rotated");
+        },
+        { once: true }
+      );
+    }
+
+    setTimeout(function () {
+      isImageRotationAllowed = true;
+    }, 2000);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const reloadIcon = document.getElementById("reloadIcon");
+  reloadIcon.addEventListener("click", function () {
+    rotateImage(reloadIcon);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  var asknameInput = document.getElementById("askname-input");
+  var greeting = document.getElementById("greet");
+  var timeEl = document.getElementById("time");
+  var dateEl = document.getElementById("date");
+
+  asknameInput.addEventListener("change", function () {
+    localStorage.setItem("name", asknameInput.value);
+    var name = asknameInput.value;
+    var timeof = getTimeOfDay();
+    greeting.textContent = `Good ${timeof}, ${name}!`;
+  });
+
+  function getTimeOfDay() {
+    var clock = new Date();
+    var hours = clock.getHours();
+    if (hours < 12) {
+      return "morning";
+    } else if (hours < 18) {
+      return "afternoon";
+    } else {
+      return "evening";
+    }
+  }
+
+  function updateTime() {
+    var clock = new Date();
+    var hours = clock.getHours();
+    var minutes = clock.getMinutes();
+    var timeof = getTimeOfDay();
+
+    var name = localStorage.getItem("name");
+
+    if (name) {
+      greeting.textContent = "Good " + timeof + ", " + name;
+    } else {
+      greeting.textContent = "Good " + timeof + "!";
+      asknameInput.style.top = "3.5%";
+      asknameInput.focus();
+    }
+
+    hours = hours % 12 || 12;
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    var options = {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+    var date = new Intl.DateTimeFormat("en-US", options).format(clock);
+
+    var TimeString = hours + ":" + minutes;
+    var DateString = date;
+    if (timeEl.textContent !== TimeString) timeEl.textContent = TimeString;
+    if (dateEl.textContent !== DateString) dateEl.textContent = DateString;
+  }
+
+  updateTime();
+  var intervalId = setInterval(updateTime, 1000);
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") {
+      clearInterval(intervalId);
+    } else {
+      intervalId = setInterval(updateTime, 1000);
+    }
+  });
+});
+
+function quoteGen() {
+  const quote = document.getElementById("mainquote");
+  const author = document.getElementById("mainauthor");
+
+  const cachedQuote = localStorage.getItem("quote");
+  if (cachedQuote) {
+    const cachedData = JSON.parse(cachedQuote);
+    const cachedTimestamp = new Date(cachedData.timestamp);
+    const now = new Date();
+    const diff = (now - cachedTimestamp) / (1000 * 60 * 60);
+    if (diff < 6) {
+      quote.innerHTML = `“${cachedData.content}”`;
+      author.innerHTML = `- ${cachedData.author}`;
+      return;
+    }
+  }
+
+  fetch("https://api.quotable.io/random?maxLength=50")
+    .then((res) => res.json())
+    .then((data) => {
+      quote.innerHTML = `“${data.content}”`;
+      author.innerHTML = `- ${data.author}`;
+      data.timestamp = new Date().toISOString();
+      localStorage.setItem("quote", JSON.stringify(data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  quoteGen();
+});
 
 let weather = {
-  apiKey: "f13b50734a9037f193248d4330b2360c",
-  defaultCity: "Delhi",
   defaultUnit: localStorage.getItem("unit") || "metric",
   fetchWeather: function (city, unit) {
+    const apiKey = "API_KEY_HERE";
     if (!city) {
-      city = this.defaultCity;
+      this.getCityByIP()
+        .then((ipCity) => {
+          if (!ipCity) {
+            city = "Delhi";
+          } else {
+            city = ipCity;
+          }
+          this.fetchWeatherData(city, unit, apiKey);
+        })
+        .catch((error) => {
+          console.error("Error fetching IP-based city: ", error);
+          city = "Delhi";
+          this.fetchWeatherData(city, unit, apiKey);
+        });
+    } else {
+      this.fetchWeatherData(city, unit, apiKey);
     }
-    if (!unit) {
-      unit = this.defaultUnit;
-    }
+  },
+
+  fetchWeatherData: function (city, unit, apiKey) {
     fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=" +
         city +
         "&units=" +
         unit +
         "&appid=" +
-        this.apiKey
+        apiKey
     )
       .then((response) => response.json())
-      .then((data) => this.displayWeather(data, unit));
+      .then((data) => {
+        this.displayWeather(data, unit);
+        localStorage.setItem("weatherData", JSON.stringify(data));
+      })
+      .catch((error) => {
+        console.error("Error fetching weather data: ", error);
+      });
+  },
+
+  getCityByIP: function () {
+    return new Promise((resolve, reject) => {
+      fetch("http://ip-api.com/json/")
+        .then((response) => response.json())
+        .then((data) => {
+          resolve(data.city);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   },
 
   displayWeather: function (data, unit) {
@@ -148,13 +314,19 @@ let weather = {
       document.getElementById("fahrenhiet").classList.add("active");
       document.getElementById("celcius").classList.remove("active");
     }
-    const savedCity = localStorage.getItem("city");
-    this.fetchWeather(savedCity, this.defaultUnit);
 
     localStorage.setItem("unit", this.defaultUnit);
+    const savedCity = localStorage.getItem("city");
     this.fetchWeather(savedCity, this.defaultUnit);
   },
 };
+
+Object.defineProperty(weather, "apiKey", {
+  value: "f13b50734a9037f193248d4330b2360c",
+  enumerable: false,
+  writable: false,
+  configurable: false,
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const city = document.getElementById("city");
@@ -165,14 +337,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const celciusBtn = document.getElementById("celcius");
   const fahrenhietBtn = document.getElementById("fahrenhiet");
   const nameInput = document.getElementById("askname-input");
+  const menuButton = document.getElementById("menubtn");
+  const selectorMenu = document.getElementById("selectormenu");
+  const blurSlider = document.getElementById("blurSlider");
+  const blurBox = document.getElementById("blurbox");
+  const tintBox = document.getElementById("tintbox");
+  const imageBox = document.getElementById("imagebox");
+  const storedBlurValue = localStorage.getItem("blurValue");
+  var alphaValue = localStorage.getItem("alphaValue");
+  var alphaSlider = document.getElementById("alphaSlider");
+  var overlay = document.getElementById("tint");
+  const body = document.body;
   var greeting = document.getElementById("greet");
 
-  const savedCity = localStorage.getItem("city");
-  if (savedCity) {
-    weather.fetchWeather(savedCity, weather.defaultUnit);
+  const cachedData = localStorage.getItem("weatherData");
+  if (cachedData) {
+    const data = JSON.parse(cachedData);
+    weather.displayWeather(data, weather.defaultUnit);
   } else {
-    weather.fetchWeather(weather.defaultCity, weather.defaultUnit);
+    const savedCity = localStorage.getItem("city");
+    if (savedCity) {
+      weather.fetchWeather(savedCity, weather.defaultUnit);
+    } else {
+      weather.fetchWeather(weather.defaultCity, weather.defaultUnit);
+    }
   }
+
+  setTimeout(function () {
+    const savedCity = localStorage.getItem("city");
+    weather.fetchWeather(savedCity, weather.defaultUnit);
+
+    setInterval(function () {
+      const savedCity = localStorage.getItem("city");
+      weather.fetchWeather(savedCity, weather.defaultUnit);
+    }, 30 * 60 * 1000);
+  }, 5000);
 
   searchInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
@@ -189,6 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
       searchBox.style.top = "-10%";
     } else {
       searchBox.style.top = "3.5%";
+      searchBox.focus();
     }
   });
 
@@ -203,6 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
       nameInput.style.top = "-10%";
     } else {
       nameInput.style.top = "3.5%";
+      nameInput.focus();
     }
   });
 
@@ -223,4 +424,71 @@ document.addEventListener("DOMContentLoaded", function () {
     weather.setUnit("imperial");
     unitclick.style.top = "-10%";
   });
+
+  menuButton.addEventListener("click", function () {
+    if (
+      selectorMenu.style.left === "2.5%" &&
+      blurBox.style.left === "2.5%" &&
+      tintBox.style.left === "2.5%" &&
+      imageBox.style.left === "2.5%"
+    ) {
+      selectorMenu.style.left = "-20%";
+      selectorMenu.style.opacity = "0%";
+      blurBox.style.left = "-20%";
+      blurBox.style.opacity = "0%";
+      tintBox.style.left = "-20%";
+      tintBox.style.opacity = "0%";
+      imageBox.style.left = "-20%";
+      imageBox.style.opacity = "0%";
+    } else {
+      selectorMenu.style.left = "2.5%";
+      selectorMenu.style.opacity = "65%";
+      blurBox.style.left = "2.5%";
+      blurBox.style.opacity = "65%";
+      tintBox.style.left = "2.5%";
+      tintBox.style.opacity = "65%";
+      imageBox.style.left = "2.5%";
+      imageBox.style.opacity = "65%";
+    }
+  });
+
+  if (storedBlurValue) {
+    body.style.webkitBackdropFilter = `blur(${storedBlurValue}px)`;
+    body.style.backdropFilter = `blur(${storedBlurValue}px)`;
+    blurSlider.value = storedBlurValue;
+  }
+
+  blurSlider.addEventListener("input", function () {
+    const blurValue = this.value;
+    body.style.webkitBackdropFilter = `blur(${blurValue}px)`;
+    body.style.backdropFilter = `blur(${blurValue}px)`;
+
+    localStorage.setItem("blurValue", blurValue);
+  });
+
+  if (alphaValue === null) {
+    alphaValue = 0;
+  } else {
+    alphaValue = parseInt(alphaValue);
+  }
+
+  overlay.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue / 100})`;
+
+  alphaSlider.value = alphaValue;
+  alphaSlider.addEventListener("input", function () {
+    alphaValue = parseInt(this.value);
+    overlay.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue / 100})`;
+  });
+
+  alphaSlider.addEventListener("change", function () {
+    localStorage.setItem("alphaValue", alphaValue);
+  });
 });
+
+document.addEventListener(
+  "contextmenu",
+  function (event) {
+    event.preventDefault();
+  },
+  false
+);
