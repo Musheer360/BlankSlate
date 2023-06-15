@@ -4,70 +4,122 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BlankSlate is a lightweight and minimal Microsoft Edge extension."
+    />
     <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="shortcut icon" type="x-icon" href="icons/icon.png" />
     <script src="main.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@200&display=swap"
-      rel="stylesheet"
-    />
     <title>New Tab</title>
   </head>
 
-  <body>
-    <div class="clockbox">
-      <div class="time">
-        <p><span id="time"></span></p>
+  <body id="body">
+    <div class="overlay" id="tint">
+      <div class="clockbox">
+        <div class="time">
+          <p><span id="time"></span></p>
+        </div>
+        <div class="date">
+          <p><span id="date"></span></p>
+        </div>
       </div>
-      <div class="date">
-        <p><span id="date"></span></p>
+
+      <div class="wish" id="greet">
+        <p id="greeting"></p>
       </div>
-    </div>
 
-    <div class="wish" id="greet">
-      <p id="greeting"></p>
-    </div>
+      <div class="entername" id="entername">
+        <input
+          type="text"
+          class="askname"
+          id="askname-input"
+          placeholder="Enter your name"
+        />
+      </div>
 
-    <div class="entername" id="entername">
-      <input
-        type="text"
-        class="askname"
-        id="askname-input"
-        placeholder="Enter your name"
-      />
-    </div>
+      <div class="quotes">
+        <div class="mainquote" id="mainquote"></div>
+        <div class="mainauthor" id="mainauthor"></div>
+      </div>
 
-    <div class="quotes">
-      <div class="mainquote" id="mainquote"></div>
-      <div class="mainauthor" id="mainauthor"></div>
-    </div>
+      <div class="weather">
+        <div class="city" id="city"></div>
+        <p class="cityblock">|</p>
+        <div class="description" id="description"></div>
+        <p class="tempblock">|</p>
+        <p class="temp" id="temp"></p>
+      </div>
 
-    <div class="weather">
-      <div class="city" id="city"></div>
-      <p class="cityblock">|</p>
-      <div class="description" id="description"></div>
-      <p class="tempblock">|</p>
-      <p class="temp" id="temp"></p>
-    </div>
+      <div class="selectcity" id="selectcity">
+        <input
+          type="text"
+          class="searchbox"
+          id="searchbox-input"
+          placeholder="Enter city"
+        />
+      </div>
 
-    <div class="selectcity" id="selectcity">
-      <input
-        type="text"
-        class="searchbox"
-        id="searchbox-input"
-        placeholder="Enter city"
-      />
-    </div>
+      <div class="units" id="unitclick">
+        <p class="chooseunit">Display unit:</p>
+        <button class="celcius" id="celcius" aria-label="Celcius">°C</button>
+        <button class="fahrenhiet" id="fahrenhiet" aria-label="Fahrenhiet">
+          °F
+        </button>
+      </div>
 
-    <div class="units" id="unitclick">
-      <p class="chooseunit">Display unit:</p>
-      <button class="celcius" id="celcius">°C</button>
-      <button class="fahrenhiet" id="fahrenhiet">°F</button>
+      <div class="menubtn" id="menubtn">
+        <button class="menu" id="settingsMenu" aria-label="Settings Menu">
+          <svg width="50" height="50" viewBox="0 0 100 100">
+            <path
+              class="line line1"
+              d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058"
+            />
+            <path class="line line2" d="M 20,50 H 80" />
+            <path
+              class="line line3"
+              d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="selectormenu" id="selectormenu">
+        <p class="selectortext">Set Local Wallpaper</p>
+        <button
+          class="chooselocal"
+          id="chooselocal"
+          aria-label="Choose a local image"
+        >
+          <img src="folder.svg" alt="folder" class="white-folder" />
+        </button>
+      </div>
+
+      <div class="blurbox" id="blurbox">
+        <p>Blur</p>
+        <input type="range" min="0" max="20" value="10" id="blurSlider" />
+      </div>
+
+      <div class="tintbox" id="tintbox">
+        <p>Tint</p>
+        <input type="range" id="alphaSlider" min="0" max="100" step="1" />
+      </div>
+
+      <div class="imagebox" id="imagebox">
+        <p>Get New Wallpaper</p>
+        <button
+          id="chooseUnsplash"
+          class="chooseUnsplash"
+          aria-label="Load a new image"
+        >
+          <img
+            src="reload.svg"
+            alt="reload"
+            class="reloadicon"
+            id="reloadIcon"
+          />
+        </button>
+      </div>
     </div>
   </body>
 </html>
