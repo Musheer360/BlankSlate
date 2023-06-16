@@ -486,8 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
       imageBox.style.opacity = "0.65";
     }
   });
-
-  // Close the menu when body is clicked
+  
   document.addEventListener("click", function (event) {
     const target = event.target;
 
