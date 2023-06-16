@@ -59,9 +59,7 @@ function setBackgroundImage() {
 }
 
 function fetchUnsplashImage() {
-  fetch(
-    "https://source.unsplash.com/1920x1080/?dark,nature,city,cars,abstract,cinematic,amoled"
-  )
+  fetch("https://source.unsplash.com/1920x1080/?wallpaper")
     .then(function (response) {
       return response.url;
     })
@@ -93,9 +91,31 @@ function toggleMenu() {
   );
 }
 
+function closeMenu(event) {
+  const clickedElement = event.target;
+  const isClickInsideMenu = clickedElement.closest("#settingsMenu");
+  const isClickInsideSelectorMenu = clickedElement.closest("#selectormenu");
+  const isClickInsideBlurBox = clickedElement.closest("#blurbox");
+  const isClickInsideTintBox = clickedElement.closest("#tintbox");
+  const isClickInsideImageBox = clickedElement.closest("#imagebox");
+
+  if (
+    !isClickInsideMenu &&
+    !isClickInsideSelectorMenu &&
+    !isClickInsideBlurBox &&
+    !isClickInsideTintBox &&
+    !isClickInsideImageBox
+  ) {
+    const menuButton = document.getElementById("settingsMenu");
+    menuButton.classList.remove("opened");
+    menuButton.setAttribute("aria-expanded", false);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const menuButton = document.getElementById("settingsMenu");
   menuButton.addEventListener("click", toggleMenu);
+  document.body.addEventListener("click", closeMenu);
 });
 
 let isImageRotationAllowed = true;
@@ -231,12 +251,27 @@ function quoteGen() {
 
 document.addEventListener("DOMContentLoaded", () => {
   quoteGen();
+
+  const shareButton = document.getElementById("shareButton");
+  shareButton.addEventListener("click", shareOnTwitter);
 });
+
+function shareOnTwitter() {
+  const quote = document.getElementById("mainquote").textContent;
+  const author = document.getElementById("mainauthor").textContent;
+
+  const tweetText = `${quote}\n${author} via @BlankSlateWeb`;
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    tweetText
+  )}`;
+
+  window.open(tweetUrl, "_blank");
+}
 
 let weather = {
   defaultUnit: localStorage.getItem("unit") || "metric",
   fetchWeather: function (city, unit) {
-    const apiKey = "API_KEY_HERE";
+    const apiKey = "f13b50734a9037f193248d4330b2360c";
     if (!city) {
       this.getCityByIP()
         .then((ipCity) => {
@@ -433,22 +468,53 @@ document.addEventListener("DOMContentLoaded", function () {
       imageBox.style.left === "2.5%"
     ) {
       selectorMenu.style.left = "-20%";
-      selectorMenu.style.opacity = "0%";
+      selectorMenu.style.opacity = "0";
       blurBox.style.left = "-20%";
-      blurBox.style.opacity = "0%";
+      blurBox.style.opacity = "0";
       tintBox.style.left = "-20%";
-      tintBox.style.opacity = "0%";
+      tintBox.style.opacity = "0";
       imageBox.style.left = "-20%";
-      imageBox.style.opacity = "0%";
+      imageBox.style.opacity = "0";
     } else {
       selectorMenu.style.left = "2.5%";
-      selectorMenu.style.opacity = "65%";
+      selectorMenu.style.opacity = "0.65";
       blurBox.style.left = "2.5%";
-      blurBox.style.opacity = "65%";
+      blurBox.style.opacity = "0.65";
       tintBox.style.left = "2.5%";
-      tintBox.style.opacity = "65%";
+      tintBox.style.opacity = "0.65";
       imageBox.style.left = "2.5%";
-      imageBox.style.opacity = "65%";
+      imageBox.style.opacity = "0.65";
+    }
+  });
+
+  // Close the menu when body is clicked
+  document.addEventListener("click", function (event) {
+    const target = event.target;
+
+    const isMenuElement =
+      target === menuButton ||
+      target === selectorMenu ||
+      target === blurBox ||
+      target === tintBox ||
+      target === imageBox ||
+      menuButton.contains(target) ||
+      selectorMenu.contains(target) ||
+      blurBox.contains(target) ||
+      tintBox.contains(target) ||
+      imageBox.contains(target);
+
+    if (!isMenuElement) {
+      menuButton.classList.remove("opened");
+      menuButton.setAttribute("aria-expanded", false);
+
+      selectorMenu.style.left = "-20%";
+      selectorMenu.style.opacity = "0";
+      blurBox.style.left = "-20%";
+      blurBox.style.opacity = "0";
+      tintBox.style.left = "-20%";
+      tintBox.style.opacity = "0";
+      imageBox.style.left = "-20%";
+      imageBox.style.opacity = "0";
     }
   });
 
