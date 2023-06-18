@@ -1,14 +1,15 @@
 # BlankSlate
 
 BlankSlate is a lightweight new tab extension designed for users who prefer a clean and minimal browsing experience.<br>
-It features a simple and elegant interface with a clock, a weather widget and a quote of the day.
+It features a simple and elegant interface with a clock, a weather widget, quote for the day, daily wallpapers and other customizations.
 
 ## Features
 
-- Automatically changing backgrounds.
+- Daily Wallpapers
+- Background Customization.
 - See the current time and date in your local timezone.
 - Get weather updates for your location.
-- Enjoy a random inspirational quotes when you open a new tab.
+- Enjoy inspirational quotes everyday.
 - More features coming soon!
 
 ## Installation
@@ -28,11 +29,14 @@ You can still install it manually by following these steps:
 5. Click on `Load unpacked` and select the folder containing BlankSlate.
 6. Enjoy your new tab page!
 
+- [You can also try out the web version before installing (Deskop Only)](https://blankslateweb.vercel.app/)
+
 ## Development
 
 BlankSlate is built with HTML, CSS and JavaScript. It uses the following APIs:
 
 - [Open Weather Map API](https://openweathermap.org/api) for weather data.
 - [Quotable API](https://github.com/lukePeavey/quotable) for quotes.
+- [IP API](https://ip-api.com/) for IP based Geolocation.
 
 If you want to contribute to BlankSlate, you can fork the repository on GitHub and submit a pull request with your changes.
