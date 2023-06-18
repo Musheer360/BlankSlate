@@ -29,7 +29,7 @@ You can still install it manually by following these steps:
 5. Click on `Load unpacked` and select the folder containing BlankSlate.
 6. Enjoy your new tab page!
 
-- [You can also try out the web version before installing (Deskop Only)](https://blankslateweb.vercel.app/)
+You can also try out the [web version](https://blankslateweb.vercel.app/) before installing. (Deskop Only)]
 
 ## Development
 
