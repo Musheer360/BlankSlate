@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
       reader.addEventListener("load", function () {
         var imageDataURL = reader.result;
         localStorage.setItem("imageData", imageDataURL);
+        localStorage.setItem("isLocalImageSelected", "true");
+        localStorage.removeItem("lastUpdate");
         setBackgroundImage();
       });
 
@@ -41,17 +43,28 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function setBackgroundImage() {
-  if (!navigator.onLine) {
-    loadRandomLocalImage();
-    return;
-  }
-
   var imageDataURL = localStorage.getItem("imageData");
+  var isLocalImageSelected = localStorage.getItem("isLocalImageSelected");
   var today = new Date();
   var lastUpdate = new Date(localStorage.getItem("lastUpdate"));
 
-  if (!lastUpdate || lastUpdate.getDate() !== today.getDate()) {
-    fetchUnsplashImage();
+  if (isLocalImageSelected === "true" && imageDataURL) {
+    document.body.style.background =
+      "url(" + imageDataURL + ") no-repeat center / cover";
+    return;
+  }
+
+  if (
+    !navigator.onLine ||
+    !lastUpdate ||
+    lastUpdate.getDate() !== today.getDate()
+  ) {
+    if (isLocalImageSelected === "true") {
+      document.body.style.background =
+        "url(" + imageDataURL + ") no-repeat center / cover";
+    } else {
+      fetchUnsplashImage();
+    }
   } else if (imageDataURL) {
     document.body.style.background =
       "url(" + imageDataURL + ") no-repeat center / cover";
@@ -66,6 +79,7 @@ function fetchUnsplashImage() {
     .then(function (imageURL) {
       localStorage.setItem("imageData", imageURL);
       localStorage.setItem("lastUpdate", new Date());
+      localStorage.setItem("isLocalImageSelected", "false");
       document.body.style.background =
         "url(" + imageURL + ") no-repeat center / cover";
     })
@@ -486,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function () {
       imageBox.style.opacity = "0.65";
     }
   });
-  
+
   document.addEventListener("click", function (event) {
     const target = event.target;
 
