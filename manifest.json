@@ -3,16 +3,10 @@
 
   "name": "BlankSlate",
   "author": "Musheer Alam",
-  "version": "2.0",
-  "description": "BlankSlate is a lightweight new tab extension designed for Microsoft Edge users who prefer a clean and minimal browsing experience.",
+  "version": "2.2",
+  "description": "BlankSlate is a lightweight new tab extension designed for users who prefer a clean and minimal browsing experience.",
 
-  "permissions": [
-    "storage",
-    "webNavigation",
-    "tabs",
-    "unlimitedStorage",
-    "incognito"
-  ],
+  "permissions": [],
 
   "icons": {
     "16": "/icons/16.png",
