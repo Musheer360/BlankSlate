@@ -1,6 +1,6 @@
 # BlankSlate
 
-BlankSlate is a lightweight new tab extension designed for users who prefer a clean and minimal browsing experience.<br>
+BlankSlate is a free and open-source lightweight new tab extension designed for users who prefer a clean and minimal browsing experience.<br>
 It features a simple and elegant interface with a clock, a weather widget, quote for the day, daily wallpapers and other customizations.
 
 ## Features
@@ -14,20 +14,11 @@ It features a simple and elegant interface with a clock, a weather widget, quote
 
 ## Installation
 
-BlankSlate is currently available for Microsoft Edge and Mozilla Firefox. You can download it from the following links:
+BlankSlate is currently available for Google Chrome, Microsoft Edge and Mozilla Firefox. You can download it from the following links:
 
+- [Google Chrome Web Store](https://chrome.google.com/webstore/detail/blankslate/ennkbdkbhipkgnbdcachacggoacjgdoc?hl=en&authuser=0)
 - [Microsoft Edge Add-on Store](https://microsoftedge.microsoft.com/addons/detail/blankslate/kdpigincofmikpepoihonmleoncikbab)
 - [Mozilla Add-ons for Firefox](https://addons.mozilla.org/en-US/firefox/addon/blankslate/)
-
-BlankSlate is also compatible with Google Chrome, but it is not yet published on the Chrome Web Store.<br>
-You can still install it manually by following these steps:
-
-1. Download the source code of BlankSlate from [GitHub](https://github.com/musheer/blankslate).
-2. Unzip the downloaded file and move the folder to a safe location.
-3. Open Chrome and go to `chrome://extensions`.
-4. Enable the developer mode toggle on the top right corner.
-5. Click on `Load unpacked` and select the folder containing BlankSlate.
-6. Enjoy your new tab page!
 
 You can also try out the [web version](https://blankslateweb.vercel.app/) before installing. (Deskop Only)
 
