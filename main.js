@@ -284,7 +284,7 @@ function shareOnTwitter() {
 let weather = {
   defaultUnit: localStorage.getItem("unit") || "metric",
   fetchWeather: function (city, unit) {
-    const apiKey = "f13b50734a9037f193248d4330b2360c";
+    const apiKey = API_KEY_HERE;
     if (!city) {
       this.getCityByIP()
         .then((ipCity) => {
@@ -370,7 +370,7 @@ let weather = {
 };
 
 Object.defineProperty(weather, "apiKey", {
-  value: "f13b50734a9037f193248d4330b2360c",
+  value: API_KEY_HERE,
   enumerable: false,
   writable: false,
   configurable: false,
