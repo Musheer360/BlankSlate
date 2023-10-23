@@ -72,7 +72,7 @@ function setBackgroundImage() {
 }
 
 function fetchUnsplashImage() {
-  fetch("https://source.unsplash.com/1920x1080/?wallpaper")
+  fetch("https://source.unsplash.com/1920x1080/?wallpapers")
     .then(function (response) {
       return response.url;
     })
@@ -240,10 +240,9 @@ function quoteGen() {
   const cachedQuote = localStorage.getItem("quote");
   if (cachedQuote) {
     const cachedData = JSON.parse(cachedQuote);
-    const cachedTimestamp = new Date(cachedData.timestamp);
-    const now = new Date();
-    const diff = (now - cachedTimestamp) / (1000 * 60 * 60);
-    if (diff < 6) {
+    const cachedDate = new Date(cachedData.timestamp).toLocaleDateString();
+    const now = new Date().toLocaleDateString();
+    if (cachedDate === now) {
       quote.innerHTML = `“${cachedData.content}”`;
       author.innerHTML = `- ${cachedData.author}`;
       return;
@@ -285,7 +284,7 @@ function shareOnTwitter() {
 let weather = {
   defaultUnit: localStorage.getItem("unit") || "metric",
   fetchWeather: function (city, unit) {
-    const apiKey = "API_KEY_HERE";
+    const apiKey = "f13b50734a9037f193248d4330b2360c";
     if (!city) {
       this.getCityByIP()
         .then((ipCity) => {
@@ -371,7 +370,7 @@ let weather = {
 };
 
 Object.defineProperty(weather, "apiKey", {
-  value: "API_KEY_HERE",
+  value: "f13b50734a9037f193248d4330b2360c",
   enumerable: false,
   writable: false,
   configurable: false,
@@ -516,6 +515,24 @@ document.addEventListener("DOMContentLoaded", function () {
       tintBox.contains(target) ||
       imageBox.contains(target);
 
+    const isCityInputElement =
+      target === city ||
+      target === searchBox ||
+      city.contains(target) ||
+      searchBox.contains(target);
+
+    const isUnitsInputElement =
+      target === tempClick ||
+      target === unitsButton ||
+      tempClick.contains(target) ||
+      unitsButton.contains(target);
+
+    const isNameInputElement =
+      target === greeting ||
+      target === nameInput ||
+      greeting.contains(target) ||
+      nameInput.contains(target);
+
     if (!isMenuElement) {
       menuButton.classList.remove("opened");
       menuButton.setAttribute("aria-expanded", false);
@@ -528,6 +545,18 @@ document.addEventListener("DOMContentLoaded", function () {
       tintBox.style.opacity = "0";
       imageBox.style.left = "-20%";
       imageBox.style.opacity = "0";
+    }
+
+    if (!isCityInputElement) {
+      searchBox.style.top = "-10%";
+    }
+
+    if (!isUnitsInputElement) {
+      unitsButton.style.top = "-10%";
+    }
+
+    if (!isNameInputElement) {
+      nameInput.style.top = "-10%";
     }
   });
 
@@ -546,7 +575,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (alphaValue === null) {
-    alphaValue = 0;
+    alphaValue = 50;
   } else {
     alphaValue = parseInt(alphaValue);
   }
