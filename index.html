@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
       content="BlankSlate is a lightweight and minimal Microsoft Edge extension."
@@ -24,11 +24,9 @@
           <p><span id="date"></span></p>
         </div>
       </div>
-
       <div class="wish" id="greet">
         <p id="greeting"></p>
       </div>
-
       <div class="entername" id="entername">
         <input
           type="text"
@@ -37,12 +35,10 @@
           placeholder="Enter your name"
         />
       </div>
-
       <div class="quotes">
         <div class="mainquote" id="mainquote"></div>
         <div class="mainauthor" id="mainauthor"></div>
       </div>
-
       <div class="weather">
         <div class="city" id="city"></div>
         <p class="cityblock">|</p>
@@ -50,7 +46,6 @@
         <p class="tempblock">|</p>
         <p class="temp" id="temp"></p>
       </div>
-
       <div class="selectcity" id="selectcity">
         <input
           type="text"
@@ -59,15 +54,13 @@
           placeholder="Enter city"
         />
       </div>
-
       <div class="units" id="unitclick">
         <p class="chooseunit">Display unit:</p>
-        <button class="celcius" id="celcius" aria-label="Celcius">°C</button>
-        <button class="fahrenhiet" id="fahrenhiet" aria-label="Fahrenhiet">
+        <button class="celcius" id="celcius" aria-label="Celcius">°C</button
+        ><button class="fahrenhiet" id="fahrenhiet" aria-label="Fahrenhiet">
           °F
         </button>
       </div>
-
       <div class="menubtn" id="menubtn">
         <button class="menu" id="settingsMenu" aria-label="Settings Menu">
           <svg width="50px" height="50px" viewBox="0 0 100 100" fill="none">
@@ -85,7 +78,6 @@
           </svg>
         </button>
       </div>
-
       <div class="tweetbtn" id="tweetbtn">
         <button id="shareButton" class="shareButton" aria-label="Share quote">
           <svg width="47" height="47" viewBox="0 0 25 25" fill="none">
@@ -97,7 +89,6 @@
           </svg>
         </button>
       </div>
-
       <div class="selectormenu" id="selectormenu">
         <p class="selectortext">Set Local Wallpaper</p>
         <button
@@ -108,19 +99,17 @@
           <img src="folder.svg" alt="folder" class="white-folder" />
         </button>
       </div>
-
       <div class="blurbox" id="blurbox">
         <p>Blur</p>
         <input
           type="range"
           min="0"
-          max="20"
-          value="10"
+          max="40"
+          value="5"
           id="blurSlider"
           class="sliders"
         />
       </div>
-
       <div class="tintbox" id="tintbox">
         <p>Tint</p>
         <input
