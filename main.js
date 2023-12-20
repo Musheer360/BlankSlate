@@ -9,17 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fileInput.addEventListener("change", function () {
       var file = fileInput.files[0];
-      var reader = new FileReader();
 
-      reader.addEventListener("load", function () {
-        var imageDataURL = reader.result;
-        localStorage.setItem("imageData", imageDataURL);
-        localStorage.setItem("isLocalImageSelected", "true");
-        localStorage.removeItem("lastUpdate");
-        setBackgroundImage();
-      });
+      if (file.type.startsWith("image/") && file.size <= 4 * 1024 * 1024) {
+        var reader = new FileReader();
 
-      reader.readAsDataURL(file);
+        reader.addEventListener("load", function () {
+          var imageDataURL = reader.result;
+          localStorage.setItem("imageData", imageDataURL);
+          localStorage.setItem("isLocalImageSelected", "true");
+          localStorage.removeItem("lastUpdate");
+          setBackgroundImage();
+        });
+
+        reader.readAsDataURL(file);
+      } else {
+        console.error("Please select a valid image file (4 MB or below).");
+      }
     });
 
     fileInput.click();
@@ -72,6 +77,14 @@ function setBackgroundImage() {
 }
 
 function fetchUnsplashImage() {
+  const overlay = document.querySelector(".overlay");
+  const originalAlpha = getComputedStyle(overlay)
+    .getPropertyValue("background-color")
+    .split(", ")[3]
+    .replace(")", "");
+
+  overlay.classList.add("fade-in-out");
+
   fetch("https://source.unsplash.com/1920x1080/?wallpapers")
     .then(function (response) {
       return response.url;
@@ -80,12 +93,22 @@ function fetchUnsplashImage() {
       localStorage.setItem("imageData", imageURL);
       localStorage.setItem("lastUpdate", new Date());
       localStorage.setItem("isLocalImageSelected", "false");
-      document.body.style.background =
-        "url(" + imageURL + ") no-repeat center / cover";
+
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 1)";
+      setTimeout(function () {
+        document.body.style.background =
+          "url(" + imageURL + ") no-repeat center / cover";
+        overlay.style.backgroundColor = `rgba(0, 0, 0, ${originalAlpha})`;
+      }, 350);
     })
     .catch(function (error) {
       console.error("Failed to fetch background image:", error);
       loadRandomLocalImage();
+    })
+    .finally(function () {
+      setTimeout(function () {
+        overlay.classList.remove("fade-in-out");
+      }, 1000);
     });
 }
 
@@ -281,15 +304,29 @@ function shareOnTwitter() {
   window.open(tweetUrl, "_blank");
 }
 
+let cursorTimer;
+
+function hideCursor() {
+  document.addEventListener("mousemove", () => {
+    clearTimeout(cursorTimer);
+    document.documentElement.style.cursor = "default";
+    cursorTimer = setTimeout(() => {
+      document.documentElement.style.cursor = "none";
+    }, 4000);
+  });
+}
+
+hideCursor();
+
 let weather = {
   defaultUnit: localStorage.getItem("unit") || "metric",
   fetchWeather: function (city, unit) {
-    const apiKey = API_KEY_HERE;
+    const apiKey = this.apiKey;
     if (!city) {
       this.getCityByIP()
         .then((ipCity) => {
           if (!ipCity) {
-            city = "Delhi";
+            city = " New Delhi";
           } else {
             city = ipCity;
           }
@@ -326,7 +363,7 @@ let weather = {
 
   getCityByIP: function () {
     return new Promise((resolve, reject) => {
-      fetch("http://ip-api.com/json/")
+      fetch("http://ip-api.com/json/?fields=city")
         .then((response) => response.json())
         .then((data) => {
           resolve(data.city);
@@ -370,7 +407,7 @@ let weather = {
 };
 
 Object.defineProperty(weather, "apiKey", {
-  value: API_KEY_HERE,
+  value: "f13b50734a9037f193248d4330b2360c",
   enumerable: false,
   writable: false,
   configurable: false,
@@ -419,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const savedCity = localStorage.getItem("city");
       weather.fetchWeather(savedCity, weather.defaultUnit);
     }, 30 * 60 * 1000);
-  }, 5000);
+  }, 0);
 
   searchInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
