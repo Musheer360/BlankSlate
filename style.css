@@ -38,6 +38,10 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.fade-in-out {
+  transition: background-color 0.35s ease-in-out;
+}
+
 body .clockbox {
   color: #fff;
   display: flex;
