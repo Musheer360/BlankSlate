@@ -85,7 +85,7 @@ function fetchUnsplashImage() {
 
   overlay.classList.add("fade-in-out");
 
-  fetch("https://source.unsplash.com/1920x1080/?wallpapers")
+  fetch("https://bingw.jasonzeng.dev?index=random")
     .then(function (response) {
       return response.url;
     })
@@ -297,7 +297,7 @@ function shareOnTwitter() {
   const author = document.getElementById("mainauthor").textContent;
 
   const tweetText = `${quote}\n${author} via @BlankSlateWeb`;
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+  const tweetUrl = `https://x.com/intent/post?text=${encodeURIComponent(
     tweetText
   )}`;
 
@@ -326,7 +326,7 @@ let weather = {
       this.getCityByIP()
         .then((ipCity) => {
           if (!ipCity) {
-            city = " New Delhi";
+            city = "New Delhi";
           } else {
             city = ipCity;
           }
@@ -407,7 +407,7 @@ let weather = {
 };
 
 Object.defineProperty(weather, "apiKey", {
-  value: "API_KEY_HERE",
+  value: "f13b50734a9037f193248d4330b2360c",
   enumerable: false,
   writable: false,
   configurable: false,
@@ -480,6 +480,7 @@ document.addEventListener("DOMContentLoaded", function () {
   nameInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
       nameInput.style.top = "-10%";
+      nameInput.value = "";
     }
   });
 
