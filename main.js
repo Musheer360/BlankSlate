@@ -407,7 +407,7 @@ let weather = {
 };
 
 Object.defineProperty(weather, "apiKey", {
-  value: "f13b50734a9037f193248d4330b2360c",
+  value: "API_KEY_HERE",
   enumerable: false,
   writable: false,
   configurable: false,
