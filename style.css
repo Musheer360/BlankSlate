@@ -477,6 +477,7 @@ body .clockbox {
   .blurbox,
   .tintbox,
   .imagebox {
+    opacity: 0%;
     height: 36px;
     width: 198px;
     font-size: 15.3px;
