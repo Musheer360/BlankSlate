@@ -363,7 +363,12 @@ let weather = {
 
   getCityByIP: function () {
     return new Promise((resolve, reject) => {
-      fetch("http://ip-api.com/json/?fields=city")
+      fetch("https://api.ipify.org/?format=json")
+        .then((response) => response.json())
+        .then((data) => {
+          const ip = data.ip;
+          return fetch(`https://ipapi.co/${ip}/json/`);
+        })
         .then((response) => response.json())
         .then((data) => {
           resolve(data.city);
