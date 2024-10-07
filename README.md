@@ -32,3 +32,6 @@ BlankSlate is built with HTML, CSS and JavaScript. It uses the following APIs:
 - [IP API](https://ip-api.com/) for IP based Geolocation.
 
 If you want to contribute to BlankSlate, you can fork the repository on GitHub and submit a pull request with your changes.
+
+## License
+This project is open source and available under the MIT License.
