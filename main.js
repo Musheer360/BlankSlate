@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   var chooseLocalBtn = document.getElementById("chooselocal");
-  var chooseUnsplashBtn = document.getElementById("chooseUnsplash");
+  var refreshBackgroundButton = document.getElementById("refreshBackground");
 
+  // Allow users to select a local image for personalization
   chooseLocalBtn.addEventListener("click", function () {
     var fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fileInput.addEventListener("change", function () {
       var file = fileInput.files[0];
 
+      // Validate file type and size to ensure proper image loading and performance
       if (file.type.startsWith("image/") && file.size <= 4 * 1024 * 1024) {
         var reader = new FileReader();
 
@@ -30,14 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
     fileInput.click();
   });
 
+  // Implement throttling to prevent excessive API calls and improve performance
   let isButtonClickAllowed = true;
 
-  chooseUnsplashBtn.addEventListener("click", function () {
+  refreshBackgroundButton.addEventListener("click", function () {
     if (isButtonClickAllowed) {
       isButtonClickAllowed = false;
 
-      fetchUnsplashImage();
+      fetchBackgroundImage();
 
+      // Reset the throttle after 2 seconds
       setTimeout(function () {
         isButtonClickAllowed = true;
       }, 2000);
@@ -47,18 +51,21 @@ document.addEventListener("DOMContentLoaded", function () {
   setBackgroundImage();
 });
 
+// Set the background image based on local storage or fetch a new one
 function setBackgroundImage() {
   var imageDataURL = localStorage.getItem("imageData");
   var isLocalImageSelected = localStorage.getItem("isLocalImageSelected");
   var today = new Date();
   var lastUpdate = new Date(localStorage.getItem("lastUpdate"));
 
+  // Prioritize user-selected local image for personalization
   if (isLocalImageSelected === "true" && imageDataURL) {
     document.body.style.background =
       "url(" + imageDataURL + ") no-repeat center / cover";
     return;
   }
 
+  // Fetch new image if offline, no last update, or it's a new day to keep content fresh
   if (
     !navigator.onLine ||
     !lastUpdate ||
@@ -68,7 +75,7 @@ function setBackgroundImage() {
       document.body.style.background =
         "url(" + imageDataURL + ") no-repeat center / cover";
     } else {
-      fetchUnsplashImage();
+      fetchBackgroundImage();
     }
   } else if (imageDataURL) {
     document.body.style.background =
@@ -76,13 +83,15 @@ function setBackgroundImage() {
   }
 }
 
-function fetchUnsplashImage() {
+// Fetch a new background image from the API
+function fetchBackgroundImage() {
   const overlay = document.querySelector(".overlay");
   const originalAlpha = getComputedStyle(overlay)
     .getPropertyValue("background-color")
     .split(", ")[3]
     .replace(")", "");
 
+  // Add fade effect for smooth transition
   overlay.classList.add("fade-in-out");
 
   fetch("https://bingw.jasonzeng.dev?index=random")
@@ -90,10 +99,12 @@ function fetchUnsplashImage() {
       return response.url;
     })
     .then(function (imageURL) {
+      // Store the new image data for faster loading on subsequent visits
       localStorage.setItem("imageData", imageURL);
       localStorage.setItem("lastUpdate", new Date());
       localStorage.setItem("isLocalImageSelected", "false");
 
+      // Implement smooth transition effect
       overlay.style.backgroundColor = "rgba(0, 0, 0, 1)";
       setTimeout(function () {
         document.body.style.background =
@@ -103,15 +114,18 @@ function fetchUnsplashImage() {
     })
     .catch(function (error) {
       console.error("Failed to fetch background image:", error);
+      // Fallback to local image if API fetch fails
       loadRandomLocalImage();
     })
     .finally(function () {
+      // Remove transition class after animation completes
       setTimeout(function () {
         overlay.classList.remove("fade-in-out");
       }, 1000);
     });
 }
 
+// Load a random local image as a fallback option
 function loadRandomLocalImage() {
   var imageIndex = Math.floor(Math.random() * 5) + 1;
   var imageURL = "local-images/" + imageIndex + ".webp";
@@ -119,15 +133,17 @@ function loadRandomLocalImage() {
     "url(" + imageURL + ") no-repeat center / cover";
 }
 
+// Toggle the settings menu for user customization
 function toggleMenu() {
   const menuButton = document.getElementById("settingsMenu");
   menuButton.classList.toggle("opened");
   menuButton.setAttribute(
     "aria-expanded",
-    menuButton.classList.contains("opened")
+    menuButton.classList.contains("opened"),
   );
 }
 
+// Close the menu when clicking outside for better UX
 function closeMenu(event) {
   const clickedElement = event.target;
   const isClickInsideMenu = clickedElement.closest("#settingsMenu");
@@ -155,6 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.body.addEventListener("click", closeMenu);
 });
 
+// Implement image rotation animation for visual feedback
 let isImageRotationAllowed = true;
 
 function rotateImage(image) {
@@ -168,10 +185,11 @@ function rotateImage(image) {
         () => {
           image.classList.remove("rotated");
         },
-        { once: true }
+        { once: true },
       );
     }
 
+    // Prevent rapid successive rotations
     setTimeout(function () {
       isImageRotationAllowed = true;
     }, 2000);
@@ -179,12 +197,15 @@ function rotateImage(image) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const refreshBackgroundButton = document.getElementById("refreshBackground");
   const reloadIcon = document.getElementById("reloadIcon");
-  reloadIcon.addEventListener("click", function () {
+
+  refreshBackgroundButton.addEventListener("click", function () {
     rotateImage(reloadIcon);
   });
 });
 
+// Implement greeting and time functionality for a personalized experience
 document.addEventListener("DOMContentLoaded", function () {
   var asknameInput = document.getElementById("askname-input");
   var greeting = document.getElementById("greet");
@@ -192,18 +213,29 @@ document.addEventListener("DOMContentLoaded", function () {
   var dateEl = document.getElementById("date");
 
   asknameInput.addEventListener("change", function () {
-    localStorage.setItem("name", asknameInput.value);
-    var name = asknameInput.value;
+    var name = capitalizeWords(asknameInput.value);
+    localStorage.setItem("name", name);
     var timeof = getTimeOfDay();
-    greeting.textContent = `Good ${timeof}, ${name}!`;
+    greeting.textContent =
+      timeof === "late night"
+        ? `Happy ${timeof}, ${name}`
+        : `Good ${timeof}, ${name}`;
   });
+
+  function capitalizeWords(str) {
+    return str.toLowerCase().replace(/\b\w/g, function (l) {
+      return l.toUpperCase();
+    });
+  }
 
   function getTimeOfDay() {
     var clock = new Date();
     var hours = clock.getHours();
-    if (hours < 12) {
+    if (hours >= 0 && hours < 4) {
+      return "late night";
+    } else if (hours < 12) {
       return "morning";
-    } else if (hours < 18) {
+    } else if (hours < 17) {
       return "afternoon";
     } else {
       return "evening";
@@ -218,10 +250,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var name = localStorage.getItem("name");
 
+    // Personalize greeting based on time of day and user's name
     if (name) {
-      greeting.textContent = "Good " + timeof + ", " + name;
+      greeting.textContent =
+        timeof === "late night"
+          ? `Happy ${timeof}, ${name}`
+          : `Good ${timeof}, ${name}`;
     } else {
-      greeting.textContent = "Good " + timeof + "!";
+      greeting.textContent =
+        timeof === "late night" ? `Happy ${timeof}!` : `Good ${timeof}!`;
       asknameInput.style.top = "3.5%";
       asknameInput.focus();
     }
@@ -238,15 +275,18 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     var date = new Intl.DateTimeFormat("en-US", options).format(clock);
 
-    var TimeString = hours + ":" + minutes;
+    var TimeString = `${hours}<span class="colon">:</span>${minutes}`;
     var DateString = date;
-    if (timeEl.textContent !== TimeString) timeEl.textContent = TimeString;
+
+    // Update time and date only if they've changed to minimize DOM manipulations
+    if (timeEl.innerHTML !== TimeString) timeEl.innerHTML = TimeString;
     if (dateEl.textContent !== DateString) dateEl.textContent = DateString;
   }
 
   updateTime();
   var intervalId = setInterval(updateTime, 1000);
 
+  // Optimize performance by pausing updates when tab is not visible
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") {
       clearInterval(intervalId);
@@ -256,54 +296,86 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Generate and display inspirational quotes
 function quoteGen() {
   const quote = document.getElementById("mainquote");
   const author = document.getElementById("mainauthor");
 
   const cachedQuote = localStorage.getItem("quote");
+  const now = new Date().toLocaleDateString();
+
+  function displayQuote(quoteData) {
+    quote.innerHTML = `"${quoteData.quote}"`;
+    author.innerHTML = `- ${quoteData.author}`;
+  }
+
+  function fetchNewQuote() {
+    fetch("https://quoteslate.vercel.app/api/quotes/random?maxLength=50")
+      .then((res) => res.json())
+      .then((data) => {
+        displayQuote(data);
+        data.timestamp = new Date().toISOString();
+        localStorage.setItem("quote", JSON.stringify(data));
+      })
+      .catch((error) => {
+        console.log(error);
+        // Provide humorous fallback quotes in case of API failure
+        const quirkyQuotes = [
+          "Our quote machine is on a coffee break!",
+          "Quote API is social distancing from the net.",
+          "Quote server is binge-watching. Back soon!",
+          "Quote hamsters on strike. Negotiating now.",
+          "Error 404: Inspiration taking a breather.",
+        ];
+        const randomQuirkyQuote =
+          quirkyQuotes[Math.floor(Math.random() * quirkyQuotes.length)];
+        const quirkyData = {
+          quote: randomQuirkyQuote,
+          author: "Musheer Alam",
+          timestamp: new Date().toISOString(),
+          isQuirky: true,
+        };
+        displayQuote(quirkyData);
+        localStorage.setItem("quote", JSON.stringify(quirkyData));
+      });
+  }
+
+  // Use cached quote if it's from today and not a quirky quote, otherwise fetch new
   if (cachedQuote) {
     const cachedData = JSON.parse(cachedQuote);
     const cachedDate = new Date(cachedData.timestamp).toLocaleDateString();
-    const now = new Date().toLocaleDateString();
-    if (cachedDate === now) {
-      quote.innerHTML = `“${cachedData.content}”`;
-      author.innerHTML = `- ${cachedData.author}`;
-      return;
-    }
-  }
 
-  fetch("https://api.quotable.io/random?maxLength=50")
-    .then((res) => res.json())
-    .then((data) => {
-      quote.innerHTML = `“${data.content}”`;
-      author.innerHTML = `- ${data.author}`;
-      data.timestamp = new Date().toISOString();
-      localStorage.setItem("quote", JSON.stringify(data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    if (cachedDate === now && !cachedData.isQuirky) {
+      displayQuote(cachedData);
+    } else {
+      fetchNewQuote();
+    }
+  } else {
+    fetchNewQuote();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   quoteGen();
 
   const shareButton = document.getElementById("shareButton");
-  shareButton.addEventListener("click", shareOnTwitter);
+  shareButton.addEventListener("click", shareOnX);
 });
 
-function shareOnTwitter() {
+// Enable social sharing of quotes
+function shareOnX() {
   const quote = document.getElementById("mainquote").textContent;
   const author = document.getElementById("mainauthor").textContent;
 
-  const tweetText = `${quote}\n${author} via @BlankSlateWeb`;
-  const tweetUrl = `https://x.com/intent/post?text=${encodeURIComponent(
-    tweetText
+  const postText = `${quote}\n${author} via @BlankSlateWeb`;
+  const postUrl = `https://x.com/intent/post?text=${encodeURIComponent(
+    postText,
   )}`;
 
-  window.open(tweetUrl, "_blank");
+  window.open(postUrl, "_blank");
 }
 
+// Hide cursor after inactivity for a cleaner UI
 let cursorTimer;
 
 function hideCursor() {
@@ -318,18 +390,28 @@ function hideCursor() {
 
 hideCursor();
 
+// Weather functionality
 let weather = {
   defaultUnit: localStorage.getItem("unit") || "metric",
-  fetchWeather: function (city, unit) {
+  fetchWeather: function (city, unit, isManualSearch = false) {
+    const cachedWeatherData = localStorage.getItem("weatherData");
+    const now = new Date().getTime();
+
+    // Use cached weather data if available and recent to reduce API calls
+    if (!isManualSearch && cachedWeatherData) {
+      const { data, timestamp } = JSON.parse(cachedWeatherData);
+      if (now - timestamp < 30 * 60 * 1000) {
+        this.displayWeather(data, unit);
+        return;
+      }
+    }
+
     const apiKey = this.apiKey;
     if (!city) {
+      // Attempt to get user's city by IP for a more personalized experience
       this.getCityByIP()
         .then((ipCity) => {
-          if (!ipCity) {
-            city = "New Delhi";
-          } else {
-            city = ipCity;
-          }
+          city = ipCity || "New Delhi";
           this.fetchWeatherData(city, unit, apiKey);
         })
         .catch((error) => {
@@ -349,18 +431,26 @@ let weather = {
         "&units=" +
         unit +
         "&appid=" +
-        apiKey
+        apiKey,
     )
       .then((response) => response.json())
       .then((data) => {
         this.displayWeather(data, unit);
-        localStorage.setItem("weatherData", JSON.stringify(data));
+        // Cache weather data to reduce API calls and improve performance
+        localStorage.setItem(
+          "weatherData",
+          JSON.stringify({
+            data: data,
+            timestamp: new Date().getTime(),
+          }),
+        );
       })
       .catch((error) => {
         console.error("Error fetching weather data: ", error);
       });
   },
 
+  // Attempt to get user's city by IP for more accurate local weather
   getCityByIP: function () {
     return new Promise((resolve, reject) => {
       fetch("https://api.ipify.org/?format=json")
@@ -383,42 +473,40 @@ let weather = {
     const { name } = data;
     const { description } = data.weather[0];
     const { temp } = data.main;
-    const roundedTemp = Math.floor(temp);
+    const roundedTemp = Math.round(temp);
+    // Remove diacritics from city name for better display
     const cityName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     document.getElementById("city").innerText = cityName;
     document.getElementById("description").innerText = description;
-    if (unit === "metric") {
-      document.getElementById("temp").innerText = roundedTemp + "°C";
-    } else {
-      document.getElementById("temp").innerText = roundedTemp + "°F";
-    }
+    document.getElementById("temp").innerText =
+      roundedTemp + (unit === "metric" ? "°C" : "°F");
   },
 
   setUnit: function (unit) {
-    if (unit === "metric") {
-      this.defaultUnit = "metric";
-      document.getElementById("celcius").classList.add("active");
-      document.getElementById("fahrenhiet").classList.remove("active");
-    } else if (unit === "imperial") {
-      this.defaultUnit = "imperial";
-      document.getElementById("fahrenhiet").classList.add("active");
-      document.getElementById("celcius").classList.remove("active");
-    }
-
-    localStorage.setItem("unit", this.defaultUnit);
+    this.defaultUnit = unit;
+    document
+      .getElementById("celcius")
+      .classList.toggle("active", unit === "metric");
+    document
+      .getElementById("fahrenhiet")
+      .classList.toggle("active", unit === "imperial");
+    localStorage.setItem("unit", unit);
     const savedCity = localStorage.getItem("city");
-    this.fetchWeather(savedCity, this.defaultUnit);
+    this.fetchWeather(savedCity || "", unit, true);
   },
 };
 
+// Define API key as a non-enumerable property for security
 Object.defineProperty(weather, "apiKey", {
-  value: "API_KEY_HERE",
+  value: "f13b50734a9037f193248d4330b2360c",
   enumerable: false,
   writable: false,
   configurable: false,
 });
 
+// Main event listener for DOM content loaded
 document.addEventListener("DOMContentLoaded", function () {
+  // Initialize UI elements
   const city = document.getElementById("city");
   const searchBox = document.getElementById("searchbox-input");
   const searchInput = document.getElementById("searchbox-input");
@@ -440,39 +528,37 @@ document.addEventListener("DOMContentLoaded", function () {
   const body = document.body;
   var greeting = document.getElementById("greet");
 
+  // Initialize weather with cached data or fetch new data
   const cachedData = localStorage.getItem("weatherData");
   if (cachedData) {
-    const data = JSON.parse(cachedData);
-    weather.displayWeather(data, weather.defaultUnit);
-  } else {
-    const savedCity = localStorage.getItem("city");
-    if (savedCity) {
-      weather.fetchWeather(savedCity, weather.defaultUnit);
+    const { data, timestamp } = JSON.parse(cachedData);
+    const now = new Date().getTime();
+    if (now - timestamp < 30 * 60 * 1000) {
+      weather.displayWeather(data, weather.defaultUnit);
     } else {
-      weather.fetchWeather(weather.defaultCity, weather.defaultUnit);
-    }
-  }
-
-  setTimeout(function () {
-    const savedCity = localStorage.getItem("city");
-    weather.fetchWeather(savedCity, weather.defaultUnit);
-
-    setInterval(function () {
       const savedCity = localStorage.getItem("city");
       weather.fetchWeather(savedCity, weather.defaultUnit);
-    }, 30 * 60 * 1000);
-  }, 0);
+    }
+  } else {
+    const savedCity = localStorage.getItem("city");
+    weather.fetchWeather(savedCity, weather.defaultUnit);
+  }
 
+  // Event listeners for UI interactions
+
+  // Search for weather by city name
   searchInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
       const city = searchInput.value;
-      weather.fetchWeather(city, weather.defaultUnit);
+      weather.fetchWeather(city, weather.defaultUnit, true);
       localStorage.setItem("city", city);
       document.getElementById("city").innerText = city;
       searchBox.style.top = "-10%";
+      searchInput.value = "";
     }
   });
 
+  // Toggle city search input visibility
   city.addEventListener("click", function () {
     if (searchBox.style.top === "3.5%") {
       searchBox.style.top = "-10%";
@@ -482,6 +568,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Handle name input for personalized greeting
   nameInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
       nameInput.style.top = "-10%";
@@ -489,6 +576,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Toggle name input visibility
   greeting.addEventListener("click", function () {
     if (nameInput.style.top === "3.5%") {
       nameInput.style.top = "-10%";
@@ -498,6 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Toggle temperature unit selection
   tempClick.addEventListener("click", function () {
     if (unitsButton.style.top === "3.5%") {
       unitsButton.style.top = "-10%";
@@ -506,16 +595,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Set temperature unit to Celsius
   celciusBtn.addEventListener("click", function () {
     weather.setUnit("metric");
-    unitclick.style.top = "-10%";
+    unitsButton.style.top = "-10%";
   });
 
+  // Set temperature unit to Fahrenheit
   fahrenhietBtn.addEventListener("click", function () {
     weather.setUnit("imperial");
-    unitclick.style.top = "-10%";
+    unitsButton.style.top = "-10%";
   });
 
+  // Toggle settings menu visibility
   menuButton.addEventListener("click", function () {
     if (
       selectorMenu.style.left === "2.5%" &&
@@ -543,6 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Close menus when clicking outside for better UX
   document.addEventListener("click", function (event) {
     const target = event.target;
 
@@ -603,12 +696,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Apply stored blur effect or use default
   if (storedBlurValue) {
     body.style.webkitBackdropFilter = `blur(${storedBlurValue}px)`;
     body.style.backdropFilter = `blur(${storedBlurValue}px)`;
     blurSlider.value = storedBlurValue;
   }
 
+  // Update blur effect based on user input
   blurSlider.addEventListener("input", function () {
     const blurValue = this.value;
     body.style.webkitBackdropFilter = `blur(${blurValue}px)`;
@@ -617,8 +712,9 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("blurValue", blurValue);
   });
 
+  // Apply stored tint effect or use default
   if (alphaValue === null) {
-    alphaValue = 50;
+    alphaValue = 75;
   } else {
     alphaValue = parseInt(alphaValue);
   }
@@ -626,20 +722,23 @@ document.addEventListener("DOMContentLoaded", function () {
   overlay.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue / 100})`;
 
   alphaSlider.value = alphaValue;
+  // Update tint effect based on user input
   alphaSlider.addEventListener("input", function () {
     alphaValue = parseInt(this.value);
     overlay.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue / 100})`;
   });
 
+  // Store tint value when user finishes adjusting
   alphaSlider.addEventListener("change", function () {
     localStorage.setItem("alphaValue", alphaValue);
   });
 });
 
+// Prevent context menu for a cleaner UI experience
 document.addEventListener(
   "contextmenu",
   function (event) {
     event.preventDefault();
   },
-  false
+  false,
 );
