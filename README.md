@@ -27,7 +27,7 @@ You can also try out the [web version](https://blankslateweb.vercel.app/) before
 BlankSlate is built with HTML, CSS and JavaScript. It uses the following APIs:
 
 - [Open Weather Map API](https://openweathermap.org/api) for weather data.
-- [Quotable API](https://github.com/lukePeavey/quotable) for quotes.
+- [QuoteSlate API](https://github.com/Musheer360/QuoteSlate) for quotes.
 - [Ipify API](https://www.ipify.org/) for fetching IP Addresses.
 - [IP API](https://ip-api.com/) for IP based Geolocation.
 
