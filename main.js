@@ -310,7 +310,7 @@ function quoteGen() {
   }
 
   function fetchNewQuote() {
-    fetch("https://quoteslate.vercel.app/api/quotes/random?maxLength=70")
+    fetch("https://quoteslate.vercel.app/api/quotes/random?maxLength=60")
       .then((res) => res.json())
       .then((data) => {
         displayQuote(data);
