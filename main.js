@@ -310,7 +310,7 @@ function quoteGen() {
   }
 
   function fetchNewQuote() {
-    fetch("https://quoteslate.vercel.app/api/quotes/random?maxLength=50")
+    fetch("https://quoteslate.vercel.app/api/quotes/random?maxLength=70")
       .then((res) => res.json())
       .then((data) => {
         displayQuote(data);
@@ -319,33 +319,24 @@ function quoteGen() {
       })
       .catch((error) => {
         console.log(error);
-        // Provide humorous fallback quotes in case of API failure
-        const quirkyQuotes = [
-          "Our quote machine is on a coffee break!",
-          "Quote API is social distancing from the net.",
-          "Quote server is binge-watching. Back soon!",
-          "Quote hamsters on strike. Negotiating now.",
-          "Error 404: Inspiration taking a breather.",
-        ];
-        const randomQuirkyQuote =
-          quirkyQuotes[Math.floor(Math.random() * quirkyQuotes.length)];
-        const quirkyData = {
-          quote: randomQuirkyQuote,
-          author: "Musheer Alam",
+        // Provide a single fallback quote in case of API failure
+        const fallbackData = {
+          quote: "API hiccup! No quotes for now, but we're fixing it!",
+          author: "Musheer (Developer of BlankSlate)",
           timestamp: new Date().toISOString(),
-          isQuirky: true,
+          isFallback: true,
         };
-        displayQuote(quirkyData);
-        localStorage.setItem("quote", JSON.stringify(quirkyData));
+        displayQuote(fallbackData);
+        localStorage.setItem("quote", JSON.stringify(fallbackData));
       });
   }
 
-  // Use cached quote if it's from today and not a quirky quote, otherwise fetch new
+  // Use cached quote if it's from today and not a fallback quote, otherwise fetch new
   if (cachedQuote) {
     const cachedData = JSON.parse(cachedQuote);
     const cachedDate = new Date(cachedData.timestamp).toLocaleDateString();
 
-    if (cachedDate === now && !cachedData.isQuirky) {
+    if (cachedDate === now && !cachedData.isFallback) {
       displayQuote(cachedData);
     } else {
       fetchNewQuote();
@@ -397,34 +388,36 @@ let weather = {
     const cachedWeatherData = localStorage.getItem("weatherData");
     const now = new Date().getTime();
 
-    // Use cached weather data if available and recent to reduce API calls
-    if (!isManualSearch && cachedWeatherData) {
+    // Always display cached data if available
+    if (cachedWeatherData) {
       const { data, timestamp } = JSON.parse(cachedWeatherData);
-      if (now - timestamp < 30 * 60 * 1000) {
-        this.displayWeather(data, unit);
+      this.displayWeather(data, unit);
+
+      // If data is recent, don't fetch new data
+      if (now - timestamp < 30 * 60 * 1000 && !isManualSearch) {
         return;
       }
     }
 
-    const apiKey = this.apiKey;
+    // Fetch new data
     if (!city) {
-      // Attempt to get user's city by IP for a more personalized experience
       this.getCityByIP()
         .then((ipCity) => {
           city = ipCity || "New Delhi";
-          this.fetchWeatherData(city, unit, apiKey);
+          this.fetchWeatherData(city, unit);
         })
         .catch((error) => {
           console.error("Error fetching IP-based city: ", error);
           city = "Delhi";
-          this.fetchWeatherData(city, unit, apiKey);
+          this.fetchWeatherData(city, unit);
         });
     } else {
-      this.fetchWeatherData(city, unit, apiKey);
+      this.fetchWeatherData(city, unit);
     }
   },
 
-  fetchWeatherData: function (city, unit, apiKey) {
+  fetchWeatherData: function (city, unit) {
+    const apiKey = this.apiKey;
     fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=" +
         city +
@@ -436,7 +429,6 @@ let weather = {
       .then((response) => response.json())
       .then((data) => {
         this.displayWeather(data, unit);
-        // Cache weather data to reduce API calls and improve performance
         localStorage.setItem(
           "weatherData",
           JSON.stringify({
@@ -447,10 +439,10 @@ let weather = {
       })
       .catch((error) => {
         console.error("Error fetching weather data: ", error);
+        // Keep using the last cached data if fetch fails
       });
   },
 
-  // Attempt to get user's city by IP for more accurate local weather
   getCityByIP: function () {
     return new Promise((resolve, reject) => {
       fetch("https://api.ipify.org/?format=json")
@@ -474,7 +466,6 @@ let weather = {
     const { description } = data.weather[0];
     const { temp } = data.main;
     const roundedTemp = Math.round(temp);
-    // Remove diacritics from city name for better display
     const cityName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     document.getElementById("city").innerText = cityName;
     document.getElementById("description").innerText = description;
@@ -529,20 +520,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var greeting = document.getElementById("greet");
 
   // Initialize weather with cached data or fetch new data
-  const cachedData = localStorage.getItem("weatherData");
-  if (cachedData) {
-    const { data, timestamp } = JSON.parse(cachedData);
-    const now = new Date().getTime();
-    if (now - timestamp < 30 * 60 * 1000) {
-      weather.displayWeather(data, weather.defaultUnit);
-    } else {
-      const savedCity = localStorage.getItem("city");
-      weather.fetchWeather(savedCity, weather.defaultUnit);
-    }
-  } else {
-    const savedCity = localStorage.getItem("city");
-    weather.fetchWeather(savedCity, weather.defaultUnit);
-  }
+  const savedCity = localStorage.getItem("city");
+  weather.fetchWeather(savedCity, weather.defaultUnit);
 
   // Event listeners for UI interactions
 
