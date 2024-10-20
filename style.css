@@ -56,6 +56,11 @@ body .clockbox {
     cursor: default;
 }
 
+#greet,
+#time {
+    cursor: pointer;
+}
+
 .time {
     font-size: 125px;
     letter-spacing: 3px;

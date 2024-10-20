@@ -211,9 +211,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var greeting = document.getElementById("greet");
   var timeEl = document.getElementById("time");
   var dateEl = document.getElementById("date");
+  var is24HourFormat =
+    localStorage.getItem("is24HourFormat") === "true" || false;
 
   asknameInput.addEventListener("change", function () {
-    var name = capitalizeWords(asknameInput.value);
+    var name = asknameInput.value;
     localStorage.setItem("name", name);
     var timeof = getTimeOfDay();
     greeting.textContent =
@@ -221,12 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
         ? `Happy ${timeof}, ${name}`
         : `Good ${timeof}, ${name}`;
   });
-
-  function capitalizeWords(str) {
-    return str.toLowerCase().replace(/\b\w/g, function (l) {
-      return l.toUpperCase();
-    });
-  }
 
   function getTimeOfDay() {
     var clock = new Date();
@@ -259,11 +255,12 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       greeting.textContent =
         timeof === "late night" ? `Happy ${timeof}!` : `Good ${timeof}!`;
-      asknameInput.style.top = "3.5%";
-      asknameInput.focus();
     }
 
-    hours = hours % 12 || 12;
+    if (!is24HourFormat) {
+      hours = hours % 12 || 12;
+    }
+
     hours = hours < 10 ? "0" + hours : hours;
     minutes = minutes < 10 ? "0" + minutes : minutes;
 
@@ -286,6 +283,13 @@ document.addEventListener("DOMContentLoaded", function () {
   updateTime();
   var intervalId = setInterval(updateTime, 1000);
 
+  // Add click event listener to switch time format
+  timeEl.addEventListener("click", function () {
+    is24HourFormat = !is24HourFormat;
+    localStorage.setItem("is24HourFormat", is24HourFormat);
+    updateTime();
+  });
+
   // Optimize performance by pausing updates when tab is not visible
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") {
@@ -294,6 +298,16 @@ document.addEventListener("DOMContentLoaded", function () {
       intervalId = setInterval(updateTime, 1000);
     }
   });
+
+  // Show name input only once if name is not set
+  if (
+    !localStorage.getItem("name") &&
+    !localStorage.getItem("namePromptShown")
+  ) {
+    asknameInput.style.top = "3.5%";
+    asknameInput.focus();
+    localStorage.setItem("namePromptShown", "true");
+  }
 });
 
 // Generate and display inspirational quotes
@@ -551,6 +565,7 @@ document.addEventListener("DOMContentLoaded", function () {
   nameInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
       nameInput.style.top = "-10%";
+      localStorage.setItem("name", nameInput.value);
       nameInput.value = "";
     }
   });
