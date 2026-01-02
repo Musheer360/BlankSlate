@@ -255,10 +255,15 @@ body .clockbox {
     padding: 0;
 }
 
+.menu svg {
+    width: clamp(40px, 6vw, 60px);
+    height: clamp(40px, 6vw, 60px);
+}
+
 .line {
     fill: none;
     stroke: #fff;
-    stroke-width: 3.5;
+    stroke-width: clamp(3px, 0.5vw, 5px);
     transition:
         stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1),
         stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -422,10 +427,10 @@ body .clockbox {
         font-size: 22.5px;
     }
 
-    .menu svg {
-        width: 45px;
-        height: 45px;
-    }
+.menu svg {
+    width: clamp(40px, 5vw, 55px);
+    height: clamp(40px, 5vw, 55px);
+}
 
     .selectormenu,
     .blurbox,
@@ -495,10 +500,10 @@ body .clockbox {
         font-size: 32.5px;
     }
 
-    .menu svg {
-        width: 65px;
-        height: 65px;
-    }
+.menu svg {
+    width: clamp(50px, 4vw, 72px);
+    height: clamp(50px, 4vw, 72px);
+}
 
     .selectormenu,
     .blurbox,
@@ -567,10 +572,10 @@ body .clockbox {
         font-size: 50px;
     }
 
-    .menu svg {
-        width: 100px;
-        height: 100px;
-    }
+.menu svg {
+    width: clamp(70px, 4vw, 110px);
+    height: clamp(70px, 4vw, 110px);
+}
 
     .selectormenu,
     .blurbox,
