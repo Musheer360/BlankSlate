@@ -217,16 +217,8 @@ body .clockbox {
     justify-content: space-evenly;
 }
 
-.celcius {
-    font-size: 16px;
-    background: 0 0;
-    color: #fff;
-    border: 0;
-    font-weight: bolder;
-    cursor: pointer;
-}
-
-.fahrenhiet {
+.celsius,
+.fahrenheit {
     font-size: 16px;
     background: 0 0;
     color: #fff;
@@ -237,7 +229,7 @@ body .clockbox {
 
 .tweetbtn {
     position: absolute;
-    bottom: 3.85%;
+    bottom: 4%;
     right: 2.5%;
 }
 
@@ -251,7 +243,7 @@ body .clockbox {
 
 .menubtn {
     position: absolute;
-    bottom: 3.85%;
+    bottom: 4%;
     left: 2.5%;
 }
 
@@ -272,49 +264,24 @@ body .clockbox {
         stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.line1 {
-    fill: none;
-    stroke: #fff;
+.line1,
+.line3 {
     stroke-dasharray: 60 207;
-    stroke-width: 3.5;
 }
 
 .line2 {
-    fill: none;
-    stroke: #fff;
     stroke-dasharray: 60 60;
-    stroke-width: 3.5;
 }
 
-.line3 {
-    fill: none;
-    stroke: #fff;
-    stroke-dasharray: 60 207;
-    stroke-width: 3.5;
-}
-
-.opened .line1 {
-    fill: none;
-    stroke: #fff;
+.opened .line1,
+.opened .line3 {
     stroke-dasharray: 90 207;
     stroke-dashoffset: -134;
-    stroke-width: 3.5;
 }
 
 .opened .line2 {
-    fill: none;
-    stroke: #fff;
     stroke-dasharray: 1 60;
     stroke-dashoffset: -30;
-    stroke-width: 3.5;
-}
-
-.opened .line3 {
-    fill: none;
-    stroke: #fff;
-    stroke-dasharray: 90 207;
-    stroke-dashoffset: -134;
-    stroke-width: 3.5;
 }
 
 .chooselocal {
@@ -353,85 +320,54 @@ body .clockbox {
     }
 }
 
-.selectormenu {
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    position: absolute;
-    left: -20%;
-    bottom: 12%;
-    height: 40px;
-    width: 220px;
-    border: 0;
-    font-size: 17px;
-    background-color: #000;
-    border-radius: 5px;
-    opacity: 65%;
-    transition:
-        left 0.5s ease,
-        opacity 0.5s ease;
-    color: #fff;
-}
-
-.blurbox {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    position: absolute;
-    left: -20%;
-    bottom: 24%;
-    height: 40px;
-    width: 220px;
-    border: 0;
-    font-size: 17px;
-    background-color: #000;
-    border-radius: 5px;
-    opacity: 65%;
-    transition:
-        left 0.7s ease,
-        opacity 0.7s ease;
-    color: #fff;
-}
-
-.tintbox {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    position: absolute;
-    left: -20%;
-    bottom: 30%;
-    height: 40px;
-    width: 220px;
-    border: 0;
-    font-size: 17px;
-    background-color: #000;
-    border-radius: 5px;
-    opacity: 65%;
-    transition:
-        left 0.8s ease,
-        opacity 0.8s ease;
-    color: #fff;
-}
-
+/* Common styles for menu panels */
+.selectormenu,
+.blurbox,
+.tintbox,
 .imagebox {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     position: absolute;
     left: -20%;
-    bottom: 18%;
     height: 40px;
     width: 220px;
     border: 0;
     font-size: 17px;
     background-color: #000;
     border-radius: 5px;
-    opacity: 65%;
+    opacity: 0;
+    color: #fff;
+}
+
+.selectormenu {
+    display: inline-flex;
+    flex-direction: row;
+    bottom: 12%;
+    transition:
+        left 0.5s ease,
+        opacity 0.5s ease;
+}
+
+.blurbox {
+    bottom: 24%;
+    transition:
+        left 0.7s ease,
+        opacity 0.7s ease;
+}
+
+.tintbox {
+    bottom: 30%;
+    transition:
+        left 0.8s ease,
+        opacity 0.8s ease;
+}
+
+.imagebox {
+    bottom: 18%;
     transition:
         left 0.6s ease,
         opacity 0.6s ease;
-    color: #fff;
 }
 
 .refreshBackground {
