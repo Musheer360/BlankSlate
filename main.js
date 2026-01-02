@@ -417,8 +417,8 @@ const weather = {
 
   setUnit(unit) {
     this.defaultUnit = unit;
-    const celsiusBtn = document.getElementById("celcius");
-    const fahrenheitBtn = document.getElementById("fahrenhiet");
+    const celsiusBtn = document.getElementById("celsius");
+    const fahrenheitBtn = document.getElementById("fahrenheit");
 
     if (celsiusBtn) celsiusBtn.classList.toggle("active", unit === "metric");
     if (fahrenheitBtn) fahrenheitBtn.classList.toggle("active", unit === "imperial");
@@ -459,8 +459,8 @@ document.addEventListener("DOMContentLoaded", () => {
     searchBox: document.getElementById("searchbox-input"),
     tempEl: document.getElementById("temp"),
     unitsButton: document.getElementById("unitclick"),
-    celsiusBtn: document.getElementById("celcius"),
-    fahrenheitBtn: document.getElementById("fahrenhiet"),
+    celsiusBtn: document.getElementById("celsius"),
+    fahrenheitBtn: document.getElementById("fahrenheit"),
     body: document.body,
   };
 

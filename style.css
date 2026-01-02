@@ -217,8 +217,8 @@ body .clockbox {
     justify-content: space-evenly;
 }
 
-.celcius,
-.fahrenhiet {
+.celsius,
+.fahrenheit {
     font-size: 16px;
     background: 0 0;
     color: #fff;
