@@ -521,7 +521,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (elements.settingsMenuBtn) {
     elements.settingsMenuBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
       toggleMenu(elements.settingsMenuBtn);
     });
 
